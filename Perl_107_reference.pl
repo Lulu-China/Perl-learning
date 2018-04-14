@@ -4,10 +4,10 @@ my @name;
 
 #生成文件
 open(In,">age.txt")|| die "can not open age.txt to write\n";
-print In, "19,康忠建";
-print In, "18,尹丙宪";
-print In, "17,郭桐宇";
-print In, "16,姜瑞妍";
+print In "19,康忠建";
+print In "18,尹丙宪";
+print In "17,郭桐宇";
+print In "16,姜瑞妍";
 close(In);
 
 #打开文件
