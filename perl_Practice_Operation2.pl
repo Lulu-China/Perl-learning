@@ -68,9 +68,10 @@ while (length($Remained) > 0) { #当剩余字串长度为0时，循环结束
     }
    }
 }
- $Segemted=~s/([^0-9.*])/ $1/g;
- $Segemted=~s/([0-9.*])/$1/g;
+ $Segemted=~s/  ([^0-9.%])/ $1/g;
+ $Segemted=~s/([0-9.%])  /$1/g;
 return $Segemted; #将$Segemted作为结果返回
 }
 close FH;
 close DD;
+system'pause';
