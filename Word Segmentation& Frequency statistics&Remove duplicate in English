@@ -1,0 +1,81 @@
+#!user/bin/perl
+print"Please input some sentences you want:\n";
+$str_in = <STDIN>;
+Participle($str_in);
+
+#Word segmentation and word list generation
+sub Participle()
+{
+	my ($string) = @_;
+	$string =~ s/[,|.|，|。|:|—|’]+/ /g;
+	my @strarry = split(" ", $string);
+	foreach $word (sort @strarry) {
+		if(length($word)>1) {
+			push(@words, $word);
+		}
+	}
+
+	print"The words which are more than 1 letter in this paragraph are:\n";
+	open (F, ">>Build_Dict.txt") or die ("Can't prepare file!,$! ");
+	foreach (sort @words) {
+		print"$_\t";
+		$j += 1;
+		if ($j%8 == 0) {
+			print"\n";
+		}
+		print F "$_\n";
+	}
+	close F;
+}
+
+#Counting the frequency of all words,outputing the word and the frequency count into a new file.
+open(In,"Build_Dict.txt"); 
+$i=0;
+while($line=<In>) 
+{
+	chomp($line); 
+	if(defined $Hash{$line}) 
+	{
+		$Hash{$line}++; 
+	}
+	else
+	{
+		$Hash {$line}=1; 
+	}
+	$i++; 
+}
+close(In); 
+
+open (out,">WFS.txt") or die ("Can't prepare file!,$! ");
+	foreach $element(sort keys %Hash) 
+	{
+		$tf=$Hash{$element}/$i; 
+		print"$element : $Hash{$element} : $tf \n";
+		print out "$element :: $Hash{$element} :: $tf \n";
+	}
+close out;
+
+#Remove duplicate values
+open(In,"Build_Dict.txt"); 
+$i=0;
+while($line=<In>) 
+{
+	chomp($line); 
+	chomp($line); 
+	$Hash {$line} = 1; 
+	$i++; 
+}
+close(In); 
+
+open (W,">RDV.txt") or die ("Can't prepare file!,$! ");
+	foreach $ele(sort keys %Hash) 
+	{ 
+		print"$ele \n";
+		print W "$ele\n";
+	}
+close W;
+
+system'pause';
+
+
+
