@@ -1,0 +1,79 @@
+#!/usr/bin/perl
+
+use warnings;
+use utf8;
+
+binmode(STDIN,  ':encoding(utf8)');
+binmode(STDOUT, ':encoding(utf8)');
+binmode(STDERR, ':encoding(utf8)');
+
+open(txt_result, ">:utf8", "res_test.txt");
+open(Corpus, "<:utf8","yuliao.txt") or die "Can' t open file! $!";
+
+	while(my $line = <Corpus>)
+	{
+		chomp($line);
+		print "$line\n======================\n";
+
+		$line =~ s/[,|.|?|，|。|？]+/ /g;
+
+		print "$line\n";
+		print txt_result "$line\n";
+	}
+
+close(Corpus);
+close(txt_result);
+
+open(Dic, ">:utf8", "res_dic.txt");
+open(txt_result, "<:utf8", "res_test.txt") or die "Can' t open file! $!";
+	while (my $line = <txt_result>)
+	{
+		chomp($line);
+		my @word = split(/ /, $line);
+		foreach(@word)
+		{
+			print "$_\n";
+			print Dic "$_\n";
+		}
+	}
+close(txt_result);
+close(Dic);
+
+open(Words, "<:utf8", "res_dic.txt");
+	my$i = 0;
+	while(my$line = <Words>)
+	{
+		chomp($line);
+		if(defined  $Hash{$line})
+		{
+			$Hash{$line}++;
+		}else{
+			$Hash{$line} = 1;
+		}
+		$i++;
+	}
+	foreach my$element(sort keys %Hash)
+	{
+		my$frequency = $Hash{$element}/$i;
+		print "$element :$Hash{$element}:$frequency\n";
+	}
+close(Words);
+
+open(In, "<:utf8", "res_dic.txt");	
+$i=0;
+while($line=<In>) 
+{
+	chomp($line); 
+	$Hash {$line} = 1; 
+	$i++; 
+}
+close(In); 
+
+open (Duplication,">remove_duplicat_values.txt") or die ("Can't prepare file!,$! ");
+	foreach $ele(sort keys %Hash) 
+	{ 
+		print"$ele \n";
+		print Duplication "$ele\n";
+	}
+
+close(Duplication);
