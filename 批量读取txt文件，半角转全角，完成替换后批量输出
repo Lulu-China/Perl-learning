@@ -1,0 +1,54 @@
+#!usr/bin/perl
+use utf8;
+use Encode;
+use Cwd;
+$CurrentDir = cwd();
+Convert($CurrentDir);
+
+sub Convert
+{
+	
+	my ($dir)=@_;
+	opendir(In, $dir);
+	@filelist=readdir(In);
+	foreach $file(@filelist)
+	{
+		if(index($file, ".txt") != length($file)-4){
+			next;
+		}
+		
+		chomp;
+		open(filein, $dir."\\".$file);
+		open(fileout, ">".$dir."\\".$file.".out");
+		
+		#read file
+		# $/ =""
+		while(<filein>){
+			chomp; # remove newlines
+			# s/^\s+//;  # remove leading whitespace
+			# s/\s+$//; # remove trailing whitespace
+			# next unless length; # next rec unless anything left
+			$line=decode("gbk", $_);
+			$line=~s/\s+//g;
+			$line=~s/\<|<<|\||\{|\[/（/g;
+			$line=~s/\>|>>|\}|\]/）/g;
+			@words=$line=~/./g;
+			foreach (@words){
+				$word=encode("gbk", $_);
+				if(ord($word) & 0x80){
+						print fileout "$word";
+					next;
+				}else{
+					@code=unpack("C2", $word);
+					$word=pack("C2", 0xa3, $code[0]+0x80);
+						print fileout "$word";
+				}
+			}
+			print fileout "\n";
+		}
+		close(filein);
+		close(fileout);	
+		# if (-f $dir."\\".$file) {unlink $dir."\\".$file;}
+	}
+	closedir(In);
+}
